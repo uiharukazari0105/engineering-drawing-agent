@@ -56,7 +56,7 @@ def main() -> None:
             if os.path.isdir(src):
                 total += add_tree(zf, src, os.path.join("project", folder))
 
-        for fname in ["PRD.md", "README.md", "research-log-2026-10-28.md"]:
+        for fname in ["PRD.md", "README.md", "research-log-2026-10-28.md", "run.py", "run.sh"]:
             full = os.path.join(ROOT, fname)
             if os.path.isfile(full):
                 zf.write(full, os.path.join("project", fname))

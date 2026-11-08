@@ -32,6 +32,29 @@ readme/                    交付文档（部署说明、图纸解析说明、�
 
 ## 快速开始
 
+### 0. 一键运行（推荐）
+
+在项目根目录执行：
+
+```bash
+./run.sh
+```
+
+首次运行会自动创建 `.venv`、安装后端与前端依赖、安装 CadQuery，并在服务就绪后打开浏览器。
+后续运行会复用已安装环境。
+
+常用参数：
+
+```bash
+./run.sh --lite                 # 跳过 CadQuery，仅使用几何摘要
+./run.sh --port 8080            # 更换端口
+./run.sh --no-browser           # 不自动打开浏览器
+./run.sh --reinstall            # 重新安装依赖
+./run.sh --check-only           # 只准备环境，不启动服务
+```
+
+也可以直接执行 `python3 run.py`。
+
 ### 1. 后端
 
 ```bash

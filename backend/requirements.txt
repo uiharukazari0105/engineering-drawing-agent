@@ -3,6 +3,7 @@ fastapi
 uvicorn
 pydantic
 networkx
+python-multipart
 
 # 测试
 pytest

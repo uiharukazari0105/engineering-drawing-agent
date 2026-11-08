@@ -20,30 +20,22 @@
 
 ## 2. 一键安装与运行
 
-### Windows（PowerShell / CMD）
-
-```bat
-cd backend
-python scripts\setup.py
-python serve.py
-```
-
-### Linux / macOS
+在项目根目录运行：
 
 ```bash
-cd backend
-python scripts/setup.py
-python serve.py
+python run.py
 ```
 
-`scripts/setup.py` 会检查 Python 版本、安装 `requirements.txt` 中的依赖，并校验前端依赖是否就位。
+macOS / Linux 也可以直接执行 `./run.sh`。脚本首次运行会创建 `.venv`、安装后端和前端依赖、
+启动服务并打开浏览器；后续运行会复用已安装环境。使用 `--lite` 可跳过 CadQuery，
+使用 `--port 8080` 可更换端口。
 
 ## 3. 部署运行步骤
 
-1. 执行 `python scripts/setup.py` 安装依赖。
-2. 执行 `python serve.py`，服务监听 `http://127.0.0.1:8000`。
-3. 浏览器打开 `http://127.0.0.1:8000`。
-4. 勾选"注入已知缺陷"→ 点击"① 解析图纸"→ 点击"② 执行修复"→ 查看修复记录与回归结果 → 点击"导出报告"。
+1. 在项目根目录执行 `python run.py`。
+2. 等待终端显示 `Ready: http://127.0.0.1:8000`。
+3. 浏览器会自动打开；也可手动访问该地址。
+4. 使用内置蓝图或上传图纸，查看审查、修复和回归结果。
 
 > 前端为**零构建**方案（浏览器原生 ESM + importmap），`frontend/node_modules` 已随包提供，无需 `npm build`。
 
