@@ -22,10 +22,12 @@ backend/                   后端（Python）
   tests/                   单元与闭环测试 + 云服务接入测试
   serve.py                 API + 前端静态资源（同源）
   requirements.txt
-frontend/                  前端（零构建：Preact + htm + three，浏览器原生 ESM）
-  src/styles/              设计系统（tokens.css / ui.css，工程制图视觉语言）
-  src/components/          TopBar/StepRail/DropZone/ViewerPanel/Inspector/IssueList/FixTimeline/DiffCompare/Stat/Toast
-  scripts/                 设计自检工具（对比度、组件渲染冒烟）
+frontend/                  前端（Vue 3 + TypeScript + Vite + shadcn-vue）
+  src/stores/              Pinia 业务状态（任务、修复、导出）
+  src/components/ui/       shadcn-vue 基础组件
+  src/components/workbench 菜单、状态栏、资源树、文档标签、流程阶段、底部 Dock
+  src/components/panels/   审查、参数、日志、对比、执行状态
+  src/components/model/    Three.js 参数化模型视口
 samples/                   演示样例（蓝图 JSON + 示意工程图 PDF/PNG）
 readme/                    交付文档（部署说明、图纸解析说明、评估指标说明、前端设计自检、审查问题修复报告、华为云服务接入说明）
 ```
@@ -55,6 +57,19 @@ readme/                    交付文档（部署说明、图纸解析说明、�
 
 也可以直接执行 `python3 run.py`。
 
+## 项目级工作区
+
+- 顶部菜单与文档标签支持同时打开多份图纸，每份图纸保留独立任务、模型、审查、修复和导出状态。
+- 左侧资源管理器以工程树组织文件夹、图纸与零件组合检查。
+- 图纸可从资源管理器直接拖入文件夹完成归类。
+- 文件菜单提供打开图纸、新建文件夹、保存工程和读取工程。
+- 工程文件为 ZIP：`project.json` 保存文件夹、任务、模型、审查和修复元数据，原始图纸放在 `drawings/` 下。
+- Pinia 持久化恢复活动图纸、文件夹、解析结果、审查与修复进度、Dock 状态和资源管理器状态。
+- Blob/File 原始内容不写入 `localStorage`，需要随工程归档时请使用“保存工程”生成 ZIP。
+- `视图 → 工作记录台` 可切换审查清单、修复记录、回归对比、执行状态和组合检查。
+- 当前组合检查执行前端确定性基础接口核对：板厚、孔径和孔数模式是否兼容。
+- 装配位姿、干涉体积、完整约束求解仍需要后续后端几何内核能力，界面中会明确标注这一边界。
+
 ### 1. 后端
 
 ```bash
@@ -66,22 +81,23 @@ python serve.py                     # 启动服务：http://127.0.0.1:8000
 
 ### 2. 前端
 
-前端为**零构建**方案（浏览器原生 ESM + importmap），依赖已随 `frontend/node_modules` 提供。
-`backend/serve.py` 已将其挂载在根路径，直接访问 `http://127.0.0.1:8000` 即可。
+前端使用 Vue 3 + TypeScript + Vite + shadcn-vue。`backend/serve.py` 默认挂载
+`frontend/dist` 生产构建；`run.py` 会自动安装依赖并执行 `npm run build`。
 
 如需重新安装前端依赖：
 
 ```bash
 cd frontend
-npm install
+npm ci
+npm run build
 ```
 
 ### 3. 前端设计自检（可复现）
 
 ```bash
 cd frontend
-node scripts/check-contrast.mjs      # WCAG 对比度（解析 tokens.css，14/14 达标）
-node scripts/smoke-components.mjs    # jsdom 渲染 8 个组件，捕获模板/运行时错误
+npm run type-check                   # vue-tsc 类型检查
+npm run build                        # Vite 生产构建
 ```
 
 设计规范与迭代记录见 `readme/前端设计自检.md`。
@@ -147,8 +163,12 @@ python -c "from app.cloud import status; import json; print(json.dumps(status(),
 | CadQuery（可选） | Apache-2.0 |
 | OpenCASCADE / OCCT（经 CadQuery） | LGPL-2.1（含例外） |
 | Three.js | MIT |
-| Preact | MIT |
-| htm | Apache-2.0 |
+| Vue 3 | MIT |
+| Pinia | MIT |
+| shadcn-vue / Reka UI | MIT |
+| Tailwind CSS | MIT |
+| Lucide | ISC |
+| Noto Sans SC / 思源黑体同源字形 | SIL OFL 1.1 |
 | FastAPI / uvicorn / pydantic | MIT / BSD |
 | NetworkX | BSD-3-Clause |
 | 设计参考：img2cad(MIT) / cadrille(Apache-2.0) | 仅作参考并注明 |

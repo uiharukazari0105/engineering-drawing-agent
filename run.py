@@ -23,14 +23,6 @@ REQUIREMENTS = BACKEND / "requirements.txt"
 STAMP = VENV / ".agent-ready"
 CADQUERY_SPEC = "cadquery==2.8.0"
 
-FRONTEND_ASSETS = (
-    "preact/dist/preact.mjs",
-    "preact/hooks/dist/hooks.mjs",
-    "htm/dist/htm.module.js",
-    "three/build/three.module.js",
-)
-
-
 def _venv_python() -> Path:
     if os.name == "nt":
         return VENV / "Scripts" / "python.exe"
@@ -135,13 +127,6 @@ def prepare_backend(*, lite: bool, reinstall: bool) -> None:
 
 
 def prepare_frontend(*, reinstall: bool) -> None:
-    missing = [
-        item for item in FRONTEND_ASSETS if not (FRONTEND / "node_modules" / item).exists()
-    ]
-    if not missing and not reinstall:
-        print("[3/4] Frontend dependencies are ready.", flush=True)
-        return
-
     npm = shutil.which("npm")
     if not npm and os.name == "nt":
         npm = shutil.which("npm.cmd")
@@ -155,14 +140,25 @@ def prepare_frontend(*, reinstall: bool) -> None:
     if not npm:
         raise RuntimeError(
             "Node.js/npm is required for the web interface. "
-            "Install Node.js 18+ and run the script again."
+            "Install Node.js 20.19+ and run the script again."
         )
+    node_env = os.environ.copy()
+    node_env["PATH"] = os.pathsep.join(
+        [str(Path(npm).parent), node_env.get("PATH", "")]
+    )
 
-    print("[3/4] Installing frontend dependencies.", flush=True)
-    command = [npm, "ci", "--no-audit", "--no-fund"]
-    if not (FRONTEND / "package-lock.json").exists():
-        command = [npm, "install", "--no-audit", "--no-fund"]
-    subprocess.check_call(command, cwd=FRONTEND)
+    node_modules = FRONTEND / "node_modules"
+    if reinstall or not node_modules.is_dir():
+        print("[3/4] Installing Vue frontend dependencies.", flush=True)
+        command = [npm, "ci", "--no-audit", "--no-fund"]
+        if not (FRONTEND / "package-lock.json").exists():
+            command = [npm, "install", "--no-audit", "--no-fund"]
+        subprocess.check_call(command, cwd=FRONTEND, env=node_env)
+    else:
+        print("[3/4] Frontend dependencies are ready.", flush=True)
+
+    print("      Building Vue production bundle.", flush=True)
+    subprocess.check_call([npm, "run", "build"], cwd=FRONTEND, env=node_env)
 
 
 def ensure_port_available(port: int) -> None:

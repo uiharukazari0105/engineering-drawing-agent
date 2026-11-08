@@ -1,4 +1,4 @@
-"""启动服务：后端 API + 前端静态资源（同源，无需 CORS 与前端构建）。
+"""启动服务：后端 API + Vue 生产构建静态资源。
 
 运行：在 backend 目录下执行 `python serve.py`，浏览器打开 http://127.0.0.1:8000
 """
@@ -11,7 +11,10 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api import app
 
-FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIST = os.path.join(ROOT_DIR, "frontend", "dist")
+FRONTEND_SOURCE = os.path.join(ROOT_DIR, "frontend")
+FRONTEND_DIR = FRONTEND_DIST if os.path.isfile(os.path.join(FRONTEND_DIST, "index.html")) else FRONTEND_SOURCE
 
 if os.path.isdir(FRONTEND_DIR):
     app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="frontend")

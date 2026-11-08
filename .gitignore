@@ -9,6 +9,7 @@ htmlcov/
 .venv/
 venv/
 *.egg-info/
+/.idea/
 
 .env
 .env.*
@@ -28,6 +29,7 @@ service-account*.json
 /backend/agent.db-wal
 /backend/uploads/
 /backend/outputs/
+/frontend/dist/
 *.log
 
 /dist/*.zip

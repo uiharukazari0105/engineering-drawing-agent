@@ -2,7 +2,7 @@
 
 - **作品名称**：工程图纸建模与自纠错 Agent
 - **队伍名称**：（填写）
-- **版本号**：v0.1.0
+- **版本号**：v0.2.0
 - **联系方式**：（填写）
 - **赛区/组别**：南部赛区 / 高校组
 
@@ -13,7 +13,7 @@
 | 组件 | 版本要求 | 是否必需 |
 |---|---|---|
 | Python | ≥ 3.10（本项目在 3.13.5 验证） | 必需 |
-| Node.js | ≥ 18（仅用于前端依赖，已随包提供） | 可选 |
+| Node.js | ^20.19 或 ≥22.12（构建 Vue 前端） | 必需 |
 | CadQuery / OCCT | 任意可用版本 | **可选**（未安装时输出几何摘要 JSON） |
 
 后端依赖：`fastapi`、`uvicorn`、`pydantic`、`networkx`；测试：`pytest`、`httpx`。
@@ -37,7 +37,8 @@ macOS / Linux 也可以直接执行 `./run.sh`。脚本首次运行会创建 `.v
 3. 浏览器会自动打开；也可手动访问该地址。
 4. 使用内置蓝图或上传图纸，查看审查、修复和回归结果。
 
-> 前端为**零构建**方案（浏览器原生 ESM + importmap），`frontend/node_modules` 已随包提供，无需 `npm build`。
+> 前端使用 Vue 3 + TypeScript + Vite + shadcn-vue；一键脚本会执行 `npm run build`，
+> 由 `backend/serve.py` 挂载 `frontend/dist`。
 
 ### 离线/命令行演示（不依赖浏览器）
 
@@ -60,8 +61,12 @@ python -m pytest -q                  # 自动化测试
 | pydantic | ≥2 | MIT | 请求模型 |
 | NetworkX | ≥3 | BSD-3 | 参数依赖图与可达性分析 |
 | Three.js | 0.160 | MIT | 三维预览 |
-| Preact | 10 | MIT | 前端组件（替代 React，零构建） |
-| htm | 3 | Apache-2.0 | 无构建的模板语法 |
+| Vue | 3.5 | MIT | 前端框架 |
+| Pinia | 3.x | MIT | 状态管理 |
+| shadcn-vue / Reka UI | 当前版本 | MIT | 无样式交互组件 |
+| Tailwind CSS | 4.x | MIT | 样式工具链 |
+| Lucide | 1.x | ISC | 工程工具图标 |
+| Noto Sans SC Variable | 5.x | SIL OFL 1.1 | 简体中文界面字体 |
 | CadQuery | 可选 | Apache-2.0 | 参数化建模与 STEP/STL 导出 |
 | OpenCASCADE (OCCT) | 经 CadQuery | LGPL-2.1（含例外） | 几何内核 |
 | Pillow | 可选 | HPND | 生成示意工程图样例 |

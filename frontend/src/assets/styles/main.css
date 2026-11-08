@@ -1,0 +1,372 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/noto-sans-sc";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Noto Sans SC Variable", "Source Han Sans SC", "Noto Sans CJK SC", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  color-scheme: light;
+  --background: #e7e3dc;
+  --foreground: #252620;
+  --card: #fcfbf7;
+  --card-foreground: #252620;
+  --popover: #fcfbf7;
+  --popover-foreground: #252620;
+  --primary: #345f73;
+  --primary-foreground: #ffffff;
+  --secondary: #eeeae2;
+  --secondary-foreground: #454740;
+  --muted: #eeeae2;
+  --muted-foreground: #62645d;
+  --accent: #e5edf0;
+  --accent-foreground: #284d60;
+  --destructive: #914943;
+  --border: #cfc8bd;
+  --input: #bfb8ad;
+  --ring: #345f73;
+  --radius: 6px;
+  --topbar-height: 46px;
+  --project-width: 220px;
+  --dock-collapsed: 40px;
+  --dock-height-current: var(--dock-collapsed);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--topbar-height) + 18px);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #c6dce9;
+  color: var(--foreground);
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.app-main {
+  min-width: 0;
+  padding-left: var(--project-width);
+  transition: padding-left 160ms ease;
+}
+
+.project-collapsed .app-main {
+  padding-left: 0;
+}
+
+.workbench-content {
+  width: min(1480px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 18px 0 70px;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  min-height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  background: #f1eee7;
+  border-bottom: 1px solid #bdb7ac;
+  box-shadow: 0 1px 2px rgb(37 38 32 / 7%);
+}
+
+.document-statusbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(420px, 1.45fr) auto;
+  overflow: hidden;
+  margin-bottom: 14px;
+  background: #f8f6f1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgb(37 38 32 / 5%);
+}
+
+.stage-stack {
+  display: grid;
+}
+
+.stage-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border-top: 1px solid #aaa49a;
+}
+
+.stage-section:last-child {
+  border-bottom: 1px solid #aaa49a;
+}
+
+.stage-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 11px;
+  min-width: 0;
+  padding: 12px 2px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stage-heading {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.stage-heading h2 {
+  margin: 0;
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.stage-heading span {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  text-overflow: ellipsis;
+}
+
+.stage-meta {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stage-body {
+  min-width: 0;
+  padding: 14px 0 24px;
+}
+
+.flow-panel {
+  display: grid;
+  grid-template-columns: minmax(310px, 1.25fr) minmax(240px, 0.8fr) auto;
+  grid-template-rows: auto 34px;
+  overflow: hidden;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px rgb(37 38 32 / 5%);
+}
+
+.viewport-shell {
+  position: relative;
+  height: 440px;
+  overflow: hidden;
+  background: #e8e5de;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.viewport-canvas {
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+
+.property-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.work-dock {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 35;
+  overflow: hidden;
+  background: var(--card);
+  border-top: 1px solid #aaa49a;
+  box-shadow: 0 -8px 28px rgb(37 38 32 / 10%);
+}
+
+.dock-body {
+  max-height: 210px;
+  min-height: 170px;
+  overflow: auto;
+  padding: 12px;
+}
+
+.work-dock > div > div:first-child {
+  padding-left: 12px;
+}
+
+.project-explorer {
+  position: fixed;
+  inset: var(--topbar-height) auto var(--dock-height-current) 0;
+  z-index: 37;
+  width: var(--project-width);
+  overflow: hidden;
+  background: #efebe4;
+  border-right: 1px solid #b7b0a5;
+}
+
+.app-shell.dock-open {
+  --dock-height-current: 220px;
+}
+
+@media (max-width: 1100px) {
+  .document-statusbar {
+    grid-template-columns: minmax(220px, 1fr) auto;
+  }
+
+  .document-fields {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    border-top: 1px solid var(--border);
+  }
+
+  .flow-panel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto 34px;
+  }
+}
+
+@media (max-width: 820px) {
+  .workbench-content {
+    width: calc(100% - 20px);
+  }
+
+  .stage-head {
+    padding: 10px 0 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .stage-body { padding: 12px 0 20px; }
+
+  .property-list {
+    grid-template-columns: 1fr;
+  }
+
+  .work-dock {
+    left: 0;
+  }
+
+  .app-main,
+  .project-collapsed .app-main {
+    padding-left: 0;
+  }
+
+  .project-explorer {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  :root {
+    --dock-collapsed: 82px;
+  }
+
+  .app-shell.dock-open {
+    --dock-height-current: 252px;
+  }
+
+  .document-statusbar {
+    grid-template-columns: 1fr;
+  }
+
+  .document-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flow-panel {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+
+  .viewport-shell {
+    height: 350px;
+  }
+
+  .property-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar {
+    padding: 0 6px;
+  }
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

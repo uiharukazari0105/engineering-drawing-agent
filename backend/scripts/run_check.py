@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import socket
 import sys
 import threading
@@ -70,9 +71,7 @@ def main() -> int:
             html = r.read().decode("utf-8", "ignore")
             print("[index]", r.status, "| 含标题:", "工程图纸建模与自纠错" in html, "| 字节:", len(html))
 
-        for path in ["/src/app.js", "/src/styles/tokens.css", "/node_modules/preact/dist/preact.mjs",
-                     "/node_modules/three/build/three.module.js",
-                     "/node_modules/three/examples/jsm/controls/OrbitControls.js"]:
+        for path in re.findall(r'(?:src|href)="(/assets/[^"]+)"', html):
             with urllib.request.urlopen(f"http://{host}:{port}{path}", timeout=10) as r:
                 print(f"[static] {r.status} {path}")
 
